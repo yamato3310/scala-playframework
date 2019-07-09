@@ -1,0 +1,38 @@
+
+# Created by https://www.gitignore.io/api/scala,playframework,visualstudiocode
+# Edit at https://www.gitignore.io/?templates=scala,playframework,visualstudiocode
+
+### PlayFramework ###
+# Ignore Play! working directory #
+bin/
+/db
+.eclipse
+/lib/
+/logs/
+/modules
+/project/project
+/project/target
+/target
+tmp/
+test-result
+server.pid
+*.eml
+/dist/
+.cache
+
+### Scala ###
+*.class
+*.log
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+
+# End of https://www.gitignore.io/api/scala,playframework,visualstudiocode
