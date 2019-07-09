@@ -3,6 +3,8 @@ package controllers
 import javax.inject._
 import play.api._
 import play.api.mvc._
+import akka.util._
+import play.api.http._
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -19,5 +21,12 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
    * a path of `/`.
    */
   def index() = Action {
-    Ok("welcom to play framework!")
+    Result(
+      header = ResponseHeader(200, Map.empty),
+      body = HttpEntity.Strict(
+        ByteString("this is sample text ."),
+        Some("text/plain")
+      )
+    )
+  }
 }
