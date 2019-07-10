@@ -21,12 +21,6 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
    * a path of `/`.
    */
   def index() = Action {
-    Result(
-      header = ResponseHeader(200, Map.empty),
-      body = HttpEntity.Strict(
-        ByteString("this is sample text ."),
-        Some("text/plain")
-      )
-    )
+    Ok("<h1>Hello!</h1><p>this is sample message.</p>").as("text/html")
   }
 }
