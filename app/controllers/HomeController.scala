@@ -26,11 +26,12 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     if (param != "") {
       message = "<p>nameが送られました</p>"
     }
-    val cookie = request.cookies.get("name")
-    message = "<p>cookie:" + cookie.getOrElse(Cookie("name", "no-cookie.")).value + "</p>"
+    val session = request.session.get("name")
+    val sessionvalue = session.getOrElse("no-session")
+    message += "<p>session:" + sessionvalue + "</p>"
     val res = Ok("<title>Hello!</title><h1>Hello!</h1>" + message).as("text/html")
     if (param != "") {
-      res.withCookies(Cookie("name", param)).bakeCookies()
+      res.withSession(request.session + ("name" -> param))
     }  else {
       res
     }
