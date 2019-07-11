@@ -20,7 +20,19 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def index(id:Int, name:Option[String]) = Action {
-    Ok("<h1>Hello!</h1><p>ID = " + id + ", NAME = " + name.getOrElse("no-name") + "</p>").as("text/html")
+  def index(id:Int, name:Option[String]) = Action { request =>
+    val param:String = name.getOrElse("")
+    var message = "<p>nameはありません</p>"
+    if (param != "") {
+      message = "<p>nameが送られました</p>"
+    }
+    val cookie = request.cookies.get("name")
+    message = "<p>cookie:" + cookie.getOrElse(Cookie("name", "no-cookie.")).value + "</p>"
+    val res = Ok("<title>Hello!</title><h1>Hello!</h1>" + message).as("text/html")
+    if (param != "") {
+      res.withCookies(Cookie("name", param)).bakeCookies()
+    }  else {
+      res
+    }
   }
 }
