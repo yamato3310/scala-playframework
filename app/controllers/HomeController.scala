@@ -1,8 +1,12 @@
 package controllers
 
+import java.apl._
 import javax.inject._
 import play.api._
 import play.api.mvc._
+import play.data._
+import play.data.Forms._
+import play.api.db._
 import akka.util._
 import play.api.http._
 
@@ -11,7 +15,7 @@ import play.api.http._
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class HomeController @Inject()(db:Database ,cc: ControllerComponents) extends MessagesAbstractController(cc) {
 
   /**
    * Create an Action to render an HTML page.
@@ -20,20 +24,23 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def index(id:Int, name:Option[String]) = Action { request =>
-    val param:String = name.getOrElse("")
-    var message = "<p>nameはありません</p>"
-    if (param != "") {
-      message = "<p>nameが送られました</p>"
+  def index(id:Int, name:Option[String]) = Action {implict request =>
+    var msg = "database record:<br><ul>"
+    try {
+      db.withConnection { conn => 
+        val stmt = conn.createStatement
+        val rs = stmt.executeQuery("select * from people")
+        while (res.next) {
+          msg += "<li>" + rs.getInt("id") + ":" + rs.getString("name") + "</li>"
+        }
+        msg += "</ul>"
+      }
+    } catch {
+      case e:SQLException =>
+        msg = "<li>no record...</li>"
     }
-    val session = request.session.get("name")
-    val sessionvalue = session.getOrElse("no-session")
-    message += "<p>session:" + sessionvalue + "</p>"
-    val res = Ok("<title>Hello!</title><h1>Hello!</h1>" + message).as("text/html")
-    if (param != "") {
-      res.withSession(request.session + ("name" -> param))
-    }  else {
-      res
-    }
+    Ok(views.html.index(
+      msg
+    ))
   }
 }
